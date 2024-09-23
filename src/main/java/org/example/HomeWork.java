@@ -1,6 +1,6 @@
 package org.example;
 
-import java.util.List;
+import java.util.*;
 
 
 public class HomeWork extends BinaryIntSearchTree {
@@ -23,9 +23,23 @@ public class HomeWork extends BinaryIntSearchTree {
      * Сигнатуру метода не меняем
      */
     public List<Integer> findMaxDigits(int count, int upperBound) {
-        //TODO реализовать метод
-        return null;
+        Set<Integer> result = recursiveFindMaxDigits(upperBound, root);
+        try {
+            return new ArrayList<>(result).subList(0, count);
+        } catch (IndexOutOfBoundsException e) {
+            throw new RuntimeException("Найденое количество элементов меньше чем " + count);
+        }
     }
 
+    private Set<Integer> recursiveFindMaxDigits(int upperBound, Node node) {
+        if (Objects.isNull(node)) return new TreeSet<>();
 
+        Set<Integer> result = new TreeSet<>(Comparator.reverseOrder());
+
+        if (node.value <= upperBound) result.add(node.value);
+
+        result.addAll(recursiveFindMaxDigits(upperBound, node.left));
+        result.addAll(recursiveFindMaxDigits(upperBound, node.right));
+        return result;
+    }
 }
